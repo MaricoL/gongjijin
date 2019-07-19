@@ -32,14 +32,14 @@ public class GongjijinApplication {
     public static void main(String[] args) throws Exception {
 
         SpringApplication.run(GongjijinApplication.class, args);
-//
+
 //        ConfigurableApplicationContext context = new SpringApplicationBuilder(GongjijinApplication.class)
 //                .web(WebApplicationType.SERVLET)
 //                .run(args);
-
-
+//
+//
 //        readExcel(context);
-
+//
 //        context.close();
 
     }

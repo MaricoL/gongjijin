@@ -1,5 +1,7 @@
 package com.ruanzhong.gongjijin.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class SubProject {
     private String subProjectName;
     @OneToMany(mappedBy = "subProject",cascade= CascadeType.ALL,fetch= FetchType.LAZY)
     private List<Table> tables;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;

@@ -1,6 +1,8 @@
 package com.ruanzhong.gongjijin.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,13 +14,19 @@ public class Table {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     private String tableName;
+    @JsonIgnore
     private String description;
+    @JsonIgnore
     private Date recordDate;
+    @JsonIgnore
     private String manager;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "sub_project_id")
     private SubProject subProject;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tables")
     private List<Field> fields;
 
