@@ -9,6 +9,7 @@ import com.ruanzhong.gongjijin.repository.FieldRepository;
 import com.ruanzhong.gongjijin.repository.ProjectRepository;
 import com.ruanzhong.gongjijin.repository.SystemRepository;
 import com.ruanzhong.gongjijin.repository.TableRepository;
+import com.ruanzhong.gongjijin.utils.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +55,8 @@ public class ShowController {
     public List<Field> getFields(@PathVariable String tableName, @PathVariable Integer subProjectId) {
         Table table = tableRepository.findByTableName(tableName, subProjectId);
         List<Field> fieldList = fieldRepository.getFieldsByTableId(table.getId());
-
+        List<Field> redList = fieldRepository.findLikeString("用","用户","商用","已用","领用","费用");
+        AjaxResult ajaxResult = new AjaxResult(fieldList);
         return fieldList;
 
     }
