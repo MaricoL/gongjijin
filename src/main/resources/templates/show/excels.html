@@ -4,66 +4,143 @@
     <meta charset="UTF-8">
     <title>展示页面</title>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/bootstrap-4.0.0-dist/css/bootstrap.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/zTree_v3/css/demo.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
-<!--    <script type="text/javascript" th:src="@{/zTree_v3/js/jquery-1.4.4.min.js}"></script>-->
-    <script type="text/javascript" th:src="@{/zTree_v3/js/jquery.ztree.core.js}"></script>
+    <script type="text/javascript" th:src="@{/zTree_v3/js/jquery.ztree.all.js}"></script>
+
 
 </head>
 <body>
 
-<div>
-    <ul id="treeDemo" class="ztree"></ul>
-</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul id="treeDemo" class="ztree" style="height: 100%; width:250px;font-size: 30px;"></ul>
+        </div>
+        <div class="col-md-9" style="padding-top: 10px;">
 
-    <div class="container">
+<!--            <table class="table table-bordered  table-condensed">-->
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>字段</th>
+                        <th>类型</th>
+                        <th>长度</th>
+                        <th>小数位</th>
+                        <th>KEY</th>
+                        <th>缺省值</th>
+                        <th>Null</th>
+                        <th>字典名</th>
+                        <th>中文描述</th>
+                        <th>附注说明</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>1111</th>
-                    <th>2222</th>
-                    <th>3333</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">aaa</th>
-                    <td>bbb</td>
-                    <td>ccc</td>
-                    <td>ddd</td>
-                </tr>
-            </tbody>
+                </tbody>
 
-        </table>
+<!--                <tbody th:if="${models} != null">-->
+<!--                <tr th:each="field:${models.fieldList}">-->
+<!--                    <th scope="row" th:text="${field.sequence}"></th>-->
+<!--                    <td th:text="${field.fieldName}"></td>-->
+<!--                    <td th:text="${field.fieldType}"></td>-->
+<!--                    <td th:text="${field.length}"></td>-->
+<!--                    <td th:text="${field.digits}"></td>-->
+<!--                    <td th:text="${field.keyType}"></td>-->
+<!--                    <td th:text="${field.defaultValue}"></td>-->
+<!--                    <td th:text="${field.isNull}"></td>-->
+<!--                    <td th:text="${field.dictionaryName}"></td>-->
+<!--                    <td th:text="${field.description}"></td>-->
+<!--                    <td th:text="${field.comments}"></td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+
+            </table>
+        </div>
     </div>
 
-<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 
-    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</div>
+
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" th:src="@{/bootstrap-4.0.0-dist/js/bootstrap.js}"></script>
 
 <SCRIPT>
     var zTreeObj;
-    // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-    var setting = {};
-    // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-    var zNodes = [
-        {name:"test1", open:true, children:[
-                {name:"test1_1"}, {name:"test1_2"}]},
-        {name:"test2", open:true, children:[
-                {name:"test2_1"}, {name:"test2_2"}]}
-    ];
-    $(document).ready(function(){
+    var setting = {
+        callback: {
+            onClick: zTreeOnClick,
+            beforeClick: validStatus
+        }
+    };
+
+    function validStatus(treeId, treeNode, clickFlag) {
+        if (!treeNode.isParent) {
+            return true;
+        }
+        return false;
+    }
+
+    // 点击表名，获得表结构
+    function zTreeOnClick(event, treeId, treeNode) {
+        // alert(treeNode.tId + ", " + treeNode.name);
+        var subProjectNode = treeNode.getParentNode();
+
         $.ajax({
-            url: "projects" ,
+            url: "getFields/" + treeNode.name + "/" + subProjectNode.id,
+            type: "GET",
+            data: {},
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                // thead标签
+                var tbody = $("tbody");
+                tbody.empty();
+                for (var i = 0; i < data.length; i++) {
+                    tbody.append("<tr>");
+                    tbody.append("<td>" + data[i].sequence + "</td>");
+                    tbody.append("<td>" + data[i].fieldName + "</td>");
+                    tbody.append("<td>" + data[i].fieldType + "</td>");
+                    tbody.append("<td>" + data[i].length + "</td>");
+                    tbody.append("<td>" + data[i].digits + "</td>");
+                    tbody.append("<td>" + data[i].keyType + "</td>");
+                    tbody.append("<td>" + data[i].defaultValue + "</td>");
+                    tbody.append("<td>" + data[i].isNull + "</td>");
+                    tbody.append("<td>" + data[i].dictionaryName + "</td>");
+                    tbody.append("<td>" + data[i].description + "</td>");
+                    tbody.append("<td>" + data[i].comments + "</td>");
+                    tbody.append("</tr>");
+                }
+            }
+        });
+
+        // var subProjectNode = treeNode.getParentNode();
+        // if (subProjectNode!= null) {
+        //     $("iframe").attr("src","getFields/" + treeNode.name + "/" + subProjectNode.id);
+        // }
+
+    }
+
+    /*<![CDATA[*/
+    ctxPath = /*[[@{/}]]*/ '';
+    /*]]>*/
+
+    $(document).ready(function () {
+
+        $.ajax({
+            url: ctxPath + "/projects",
             type: "GET",
             data: {},
             dataType: "json",
             async: false,
             success: function (data) {
                 zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
+
+
             }
         });
 

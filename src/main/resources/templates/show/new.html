@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Title</title>
+</head>
+<body>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>字段</th>
+        <th>类型</th>
+        <th>长度</th>
+        <th>小数位</th>
+        <th>KEY</th>
+        <th>缺省值</th>
+        <th>缺省值</th>
+        <th>Null</th>
+        <th>字典名</th>
+        <th>中文描述</th>
+        <th>附注说明</th>
+    </tr>
+    </thead>
+    <tbody th:if="${models.fieldList} != null">
+        <tr th:each="field:${models.fieldList}">
+            <th scope="row" th:text="${field.sequence}"></th>
+            <td th:text="${field.fieldName}"></td>
+            <td th:text="${field.fieldType}"></td>
+            <td th:text="${field.length}"></td>
+            <td th:text="${field.digits}"></td>
+            <td th:text="${field.keyType}"></td>
+            <td th:text="${field.defaultValue}"></td>
+            <td th:text="${field.isNull}"></td>
+            <td th:text="${field.dictionaryName}"></td>
+            <td th:text="${field.description}"></td>
+            <td th:text="${field.comments}"></td>
+        </tr>
+    </tbody>
+
+</table>
+
+</body>
+</html>

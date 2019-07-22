@@ -12,14 +12,20 @@ public class Project {
     private Integer id;
     private String projectName;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "system_id")
+    private System system;
+
     @OneToMany(mappedBy = "project",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     private List<SubProject> subProjects;
 
     public Project() {
     }
 
-    public Project(String projectName) {
+    public Project(String projectName , System system) {
         this.projectName = projectName;
+        this.system = system;
     }
 
     public Integer getId() {
@@ -46,5 +52,11 @@ public class Project {
         this.subProjects = subProjects;
     }
 
+    public System getSystem() {
+        return system;
+    }
 
+    public void setSystem(System system) {
+        this.system = system;
+    }
 }
